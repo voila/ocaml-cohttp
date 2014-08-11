@@ -54,6 +54,7 @@ let ls_dir dir =
 let rec handler ~info ~docroot ~verbose ~index sock req body =
   let uri = Cohttp.Request.uri req in
   let path = Uri.path uri in
+  let decoded_path = Uri.pct_decode path in
   (* Log the request to the console *)
   printf "%s %s %s\n%!"
     (Cohttp.(Code.string_of_method (Request.meth req)))
@@ -101,7 +102,7 @@ let rec handler ~info ~docroot ~verbose ~index sock req body =
                 <hr />%s
                 </body>
               </html>"
-          path contents info in
+          decoded_path contents info in
         Server.respond_string ~status:`OK ~body ()
     end
     | Unix.S_REG -> serve_file ~docroot ~uri
